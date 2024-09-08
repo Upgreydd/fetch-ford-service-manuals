@@ -91,7 +91,11 @@ export default async function savePage(
     const pdfPath = join(folderPath, `${title}.pdf`);
 
     // can't use getSvgUrl here because the SVG is too big
-    await browserPage.goto(`file:///${resolve(svgPath)}`);
+    const filePath = resolve(svgPath);
+    const directoryPath = dirname(filePath);
+    const fileName = encodeURIComponent(basename(filePath)); // Only encode the file name
+    const fullPath = `file://${directoryPath}/${fileName}`;
+    await browserPage.goto(fullPath);
     await browserPage.pdf({
       path: pdfPath,
       landscape: true,
